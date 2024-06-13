@@ -8,98 +8,87 @@
                     <h6 class="m-0 font-weight-bold text-primary">Form Karyawan</h6>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route("employee.store") }}" method="post" enctype="multipart/form-data"
-                        autocomplete="off">
+                    <form id="employeeForm" enctype="multipart/form-data" autocomplete="off">
                         @csrf
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="employee_name">Nama karyawan</label>
-                                <input type="text" class="form-control @error("employee_name") is-invalid @enderror"
-                                    name="employee_name" id="employee_name" placeholder="Nama karyawan...">
-                                @error("employee_name")
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <input type="text" class="form-control" name="employee_name" id="employee_name"
+                                    placeholder="Nama karyawan...">
+                                <div class="invalid-feedback" id="employee_name_error"></div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="position">Jabatan</label>
-                                <input type="text" class="form-control @error("position") is-invalid @enderror"
-                                    name="position" id="position" placeholder="Jabatan...">
-                                @error("position")
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <input type="text" class="form-control" name="position" id="position"
+                                    placeholder="Jabatan...">
+                                <div class="invalid-feedback" id="position_error"></div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="gender">Jenis Kelamin</label>
-                                <select class="form-control select2-bootstrap4 @error("gender") is-invalid @enderror"
-                                    name="gender" id="gender">
+                                <select class="form-control" name="gender" id="gender">
                                     <option selected disabled>Pilih</option>
                                     <option value="male">Laki-laki</option>
                                     <option value="female">Perempuan</option>
                                 </select>
-                                @error("gender")
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <div class="invalid-feedback" id="gender_error"></div>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="employment_period">Masa Kerja</label>
-                                <input type="text" class="form-control @error("employment_period") is-invalid @enderror"
-                                    name="employment_period" id="employment_period"
+                                <input type="text" class="form-control" name="employment_period" id="employment_period"
                                     placeholder="Pilih rentang masa kerja...">
-                                @error("employment_period")
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <div class="invalid-feedback" id="employment_period_error"></div>
                             </div>
-
                             <div class="form-group col-md-6">
                                 <label for="active">Status</label>
-                                <select id="active" class="form-control @error("active") is-invalid @enderror"
-                                    name="active">
-                                    <option value="1" {{ old("active") == "1" ? "selected" : "" }}>Aktif</option>
-                                    <option value="0" {{ old("deactive") == "0" ? "selected" : "" }}>Tidak Aktif
-                                    </option>
+                                <select id="active" class="form-control" name="active">
+                                    <option value="1" selected>Aktif</option>
+                                    <option value="0">Tidak Aktif</option>
                                 </select>
-                                @error("active")
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-
+                                <div class="invalid-feedback" id="active_error"></div>
                             </div>
-
-                            <!-- File Input untuk Foto Karyawan -->
                             <div class="form-group col-md-6">
                                 <label for="photo">Foto Karyawan</label>
                                 <input id="photo" name="photo[]" type="file" class="file" data-show-upload="false"
                                     data-show-caption="true">
                             </div>
-
                         </div>
-
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                            <button type="button" id="submitForm" class="btn btn-primary btn-sm">Submit</button>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
-    <style>
-        .select2-container--bootstrap4 .select2-selection--single {
-            height: calc(2.25rem + 2px);
-            padding: .375rem .75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            background-color: #fff;
-            background-clip: padding-box;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-        }
-    </style>
 @endsection
 
 @push("scripts")
     <script>
         $(document).ready(function() {
+            $('#submitForm').click(function() {
+                var formData = new FormData($('#employeeForm')[0]);
+
+                $.ajax({
+                    url: "{{ route("employee.store") }}",
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        // Handle success response
+                        console.log(response.message); // Pesan sukses dari server
+                        // Redirect to dashboard
+                        window.location.href =
+                            '/employee'; // Mengarahkan langsung ke /dashboard
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle error response
+                        console.error(xhr.responseJSON.message);
+                    }
+                });
+            });
+
+
             // Date Range Picker
             $('#employment_period').daterangepicker({
                 autoUpdateInput: false,
@@ -127,7 +116,7 @@
             // File Input dari Krajee
             $("#photo").fileinput({
                 theme: 'fas',
-                uploadUrl: "{{ route("employee.upload") }}", // Ganti dengan URL untuk mengunggah file
+                uploadUrl: "{{ route("api.employees.upload") }}", // Ganti dengan URL untuk mengunggah file
                 showUpload: false,
                 showCaption: true,
                 browseClass: "btn btn-primary",
@@ -153,8 +142,6 @@
             });
 
             // Dropzone.js untuk file PDF
-
-
         });
     </script>
 @endpush

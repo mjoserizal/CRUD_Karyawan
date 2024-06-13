@@ -8,7 +8,7 @@
                     <h6 class="m-0 font-weight-bold text-primary">Edit Data Karyawan</h6>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route("employee.update", $employee) }}" method="post">
+                    <form id="employeeForm" enctype="multipart/form-data">
                         @method("PUT")
                         @csrf
                         <div class="form-row">
@@ -33,9 +33,6 @@
                                 @enderror
                             </div>
                             <div class="form-group col-md-6">
-                                @error("gender")
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
                                 <label for="gender">Jenis Kelamin</label>
                                 <select class="form-control select2-bootstrap4 @error("gender") is-invalid @enderror"
                                     name="gender" id="gender">
@@ -78,7 +75,7 @@
                         </div>
 
                         <div class="card-footer">
-                            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                            <button type="submit" id="submitForm" class="btn btn-primary btn-sm">Submit</button>
                         </div>
                     </form>
                 </div>
@@ -102,6 +99,8 @@
 @endsection
 
 @push("scripts")
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script>
         $(document).ready(function() {
             // Date Range Picker
@@ -126,6 +125,28 @@
             $('#gender').select2({
                 theme: 'bootstrap4',
                 placeholder: 'Pilih',
+            });
+
+            // Handle form submission
+            $('#submitForm').click(function(e) {
+                e.preventDefault();
+
+                var formData = new FormData($('#employeeForm')[0]);
+
+                $.ajax({
+                    url: "{{ route("api.employees.update", $employee->id) }}",
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        console.log(response.message);
+                        window.location.href = response.redirect;
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseJSON.message);
+                    }
+                });
             });
         });
     </script>

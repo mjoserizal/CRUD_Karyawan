@@ -19,3 +19,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('/employees', [ApiEmployeeController::class, 'index']);
+Route::prefix('employees')->group(function () {
+    Route::get('/', [ApiEmployeeController::class, 'index'])->name('api.employees.index');
+    Route::post('/', [ApiEmployeeController::class, 'store'])->name('api.employees.store');
+    Route::put('/{employee}', [ApiEmployeeController::class, 'update'])->name('api.employees.update');
+    Route::delete('/{id}', [ApiEmployeeController::class, 'destroy'])->name('api.employees.destroy');
+    Route::post('/upload', [ApiEmployeeController::class, 'upload'])->name('api.employees.upload');
+    Route::get('/{id}', [ApiEmployeeController::class, 'show'])->name('api.employees.show');
+});
