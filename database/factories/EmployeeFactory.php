@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Models\Employee;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class EmployeeFactory extends Factory
 {
@@ -19,7 +18,7 @@ class EmployeeFactory extends Factory
             'employment_start_date' => $this->faker->date,
             'employment_end_date' => $this->faker->optional()->date,
             'active_status' => $this->faker->boolean ? '1' : '0',
-            'photo' => $this->faker->image('public/photos', 640, 480, null, false), // generates a photo in public/photos
+            'photo' => $this->faker->image('public/storage/photos', 640, 480, null, false), // generates a photo in storage/app/public/photos
         ];
     }
 }
