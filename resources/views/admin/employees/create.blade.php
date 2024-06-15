@@ -75,21 +75,16 @@
                     processData: false,
                     contentType: false,
                     success: function(response) {
-                        // Handle success response
-                        console.log(response.message); // Pesan sukses dari server
-                        // Redirect to dashboard
+                        console.log(response.message);
                         window.location.href =
-                            '/employee'; // Mengarahkan langsung ke /dashboard
+                            '/employee';
                     },
                     error: function(xhr, status, error) {
-                        // Handle error response
                         console.error(xhr.responseJSON.message);
                     }
                 });
             });
 
-
-            // Date Range Picker
             $('#employment_period').daterangepicker({
                 autoUpdateInput: false,
                 locale: {
@@ -107,16 +102,14 @@
                 $(this).val('');
             });
 
-            // Select2
             $('#gender').select2({
                 theme: 'bootstrap4',
                 placeholder: 'Pilih',
             });
 
-            // File Input dari Krajee
             $("#photo").fileinput({
                 theme: 'fas',
-                uploadUrl: "{{ route("api.employees.upload") }}", // Ganti dengan URL untuk mengunggah file
+                uploadUrl: "{{ route("api.employees.upload") }}",
                 showUpload: false,
                 showCaption: true,
                 browseClass: "btn btn-primary",
@@ -124,7 +117,7 @@
                 previewFileIcon: '<i class="fas fa-file"></i>',
                 overwriteInitial: false,
                 initialPreviewAsData: true,
-                initialPreviewFileType: 'image', // Jenis file yang ditampilkan di awal
+                initialPreviewFileType: 'image',
                 allowedFileExtensions: ['jpg', 'png', 'gif', 'jpeg'],
                 preferIconicPreview: true,
                 previewFileIconSettings: {
@@ -140,8 +133,6 @@
                     }
                 }
             });
-
-            // Dropzone.js untuk file PDF
         });
     </script>
 @endpush

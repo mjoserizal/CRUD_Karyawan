@@ -175,8 +175,6 @@
                     }
                 ]
             });
-
-            // Handle delete action
             $('#dataTable tbody').on('click', 'button.btnDelete', function() {
                 var row = $(this).closest('tr');
                 var employeeId = dataTable.row(row).data().id;

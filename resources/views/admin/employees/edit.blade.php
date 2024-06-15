@@ -120,14 +120,10 @@
             $('#employment_period').on('cancel.daterangepicker', function(ev, picker) {
                 $(this).val('');
             });
-
-            // Select2
             $('#gender').select2({
                 theme: 'bootstrap4',
                 placeholder: 'Pilih',
             });
-
-            // Handle form submission
             $('#submitForm').click(function(e) {
                 e.preventDefault();
 

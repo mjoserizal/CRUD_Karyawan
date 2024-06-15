@@ -18,7 +18,6 @@ class EmployeeFactory extends Factory
             'employment_start_date' => $this->faker->date,
             'employment_end_date' => $this->faker->optional()->date,
             'active_status' => $this->faker->boolean ? '1' : '0',
-            'photo' => $this->faker->image('public/storage/photos', 640, 480, null, false), // generates a photo in storage/app/public/photos
         ];
     }
 }
